@@ -421,3 +421,41 @@ public:
     }
 };
 ```
+
+# recover binary search tree
+**思路：因为只有两个节点被替换过，所以中序遍历BST，发现prev >= root即不满组条件**
+
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        if (root == nullptr) return;
+        prev = new TreeNode(INT_MIN);
+        first = second = nullptr;
+        dfs(root);
+        if (first != nullptr && second != nullptr) swap(first->val, second->val);
+        return;
+    }
+    void dfs(TreeNode*root) {
+        if (root == nullptr) return;
+        
+        dfs(root->left);
+        if (first == nullptr && prev->val >= root->val) first = prev;
+        if (first != nullptr && prev->val >= root->val) second = root;
+        prev = root;
+        dfs(root->right);
+    }
+    TreeNode* first;
+    TreeNode* second;
+    TreeNode* prev;
+};
+```
