@@ -355,3 +355,37 @@ public:
     }
 };
 ```
+
+# diameter of binary tree
+
+**思路：求得每个节点得左右深度，取l+r+1的最大值**
+
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        ans = 1;
+        dfs(root);
+        return ans-1;
+    }
+    
+    int dfs(TreeNode* root) {
+        if (root == nullptr) return 0;
+        int l = dfs(root->left);
+        int r = dfs(root->right);
+        ans = max(l+r+1, ans);
+        return max(l, r) + 1;
+    }
+    
+    int ans;
+};
+```
