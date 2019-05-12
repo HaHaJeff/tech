@@ -389,3 +389,35 @@ public:
     int ans;
 };
 ```
+
+# range sum of bst
+
+**思路：在bst中求满足某一范围的节点和**
+
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int rangeSumBST(TreeNode* root, int L, int R) {
+        if (root == nullptr) return 0;
+        int left = 0, right = 0;
+        if (L <= root->val && R >= root->val) {
+            left = rangeSumBST(root->left, L, root->val)+root->val;
+            right = rangeSumBST(root->right, root->val, R);
+        } else if (R <= root->val) {
+            left = rangeSumBST(root->left, L, R);
+        } else if (L >= root->val) {
+            right = rangeSumBST(root->right, L, R);
+        }
+        return left + right;
+    }
+};
+```
