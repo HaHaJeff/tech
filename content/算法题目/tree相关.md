@@ -459,3 +459,104 @@ public:
     TreeNode* prev;
 };
 ```
+
+# range sum query mutable
+
+``` cpp
+#include <vector>
+using namespace std;
+struct SegmentTreeNode {
+    int start,end,sum;
+	SegmentTreeNode* left;
+	SegmentTreeNode* right;
+
+	SegmentTreeNode(int s, int e) : start(s), end(e), sum(0), left(nullptr), right(nullptr) {}
+};
+
+struct SegmentTree {
+	SegmentTreeNode* buildTree(vector<int>& nums, int start, int end);
+	int modifyTree(int index, int val) { return modifyTree(index, val, root); }
+	int modifyTree(int index, int val, SegmentTreeNode* node);
+	int queryTree(int start, int end) { return queryTree(start, end, root); }
+	int queryTree(int start, int end, SegmentTreeNode* node);
+	~SegmentTree();
+	void deleteNode(SegmentTreeNode* node);
+	SegmentTreeNode* root;
+};
+
+SegmentTreeNode* SegmentTree::buildTree(vector<int>& nums, int start, int end) {
+	if (start > end) return nullptr;
+	SegmentTreeNode* node = new SegmentTreeNode(start, end);
+    if (start == end) { node->sum = nums[start]; return node;}
+	int mid = start + ((node->end - node->start)>>1);
+	node->left = buildTree(nums, start, mid);
+	node->right = buildTree(nums, mid + 1, end);
+	node->sum = node->left->sum + node->right->sum;
+	return node;
+}
+
+int SegmentTree::modifyTree(int index, int val, SegmentTreeNode* node) {
+	if (node == nullptr) return 0;
+	int diff = 0;
+	if (node->start == node->end && node->start == index) {
+		diff = val - node->sum;
+		node->sum = val;
+		return diff;
+	}
+	int mid = node->start + ((node->end - node->start)>>1);
+	if (index > mid) {
+		diff = modifyTree(index, val, node->right);
+	}
+	else {
+		diff = modifyTree(index, val, node->left);
+	}
+	node->sum += diff;
+	return diff;
+}
+
+int SegmentTree::queryTree(int start, int end, SegmentTreeNode* node) {
+	if (node == nullptr) return 0;
+	if (node->start == start && node->end == end) {
+        return node->sum;
+    }
+	int mid = node->start + ((node->end - node->start)>>1);
+	if (start > mid) return queryTree(start, end, node->right);
+	if (end <= mid) return queryTree(start, end, node->left);
+	return queryTree(start, mid, node->left) + queryTree(mid + 1, end, node->right);
+}
+
+void SegmentTree::deleteNode(SegmentTreeNode* node) {
+	if (node == nullptr) return;
+	deleteNode(node->left);
+	deleteNode(node->right);
+	delete(node);
+}
+
+SegmentTree::~SegmentTree() {
+	//deleteNode(root);
+}
+
+class NumArray {
+public:
+	NumArray(vector<int>& nums) {
+		tree.root = tree.buildTree(nums, 0, nums.size() - 1);
+	}
+
+	void update(int i, int val) {
+		tree.modifyTree(i, val);
+	}
+
+	int sumRange(int i, int j) {
+		return tree.queryTree(i, j);
+	}
+
+	SegmentTree tree;
+};
+
+/**
+* Your NumArray object will be instantiated and called as such:
+* NumArray* obj = new NumArray(nums);
+* obj->update(i,val);
+* int param_2 = obj->sumRange(i,j);
+*/
+```
