@@ -560,3 +560,55 @@ public:
 * int param_2 = obj->sumRange(i,j);
 */
 ```
+
+# cousins in binary
+**思路：BFS遍历**
+- 判断当前层节点的左右子节点是否于x，y相同，如果相同，则false
+- 判断当前层节点的值是否全部满足x，y，如果满足，返回true
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isCousins(TreeNode* root, int x, int y) {
+        // same depth but have different parents
+        queue<TreeNode*> q;
+        q.push(root);
+        while (!q.empty()) {
+            bool xExisting = false;
+            bool yExisting = false;
+            int s = q.size();
+            
+            for (int i = 0; i < s; i++) {
+                TreeNode* cur = q.front(); q.pop();
+                if (cur->left != nullptr && cur->right != nullptr) {
+                    if ((cur->left->val == x && cur->right->val == y) ||
+                        (cur->left->val == y && cur->right->val == x)) {
+                        return false;
+                    }
+                }
+                
+                if (cur->val == x) xExisting = true;
+                if (cur->val == y) yExisting = true;
+                
+                if (cur->left != nullptr) {
+                    q.push(cur->left);
+                }
+                if (cur->right != nullptr) {
+                    q.push(cur->right); 
+                }
+            }
+            
+            if (xExisting && yExisting) return true;
+        }
+        return false;
+    }
+};
+```
