@@ -612,3 +612,35 @@ public:
     }
 };
 ```
+
+
+
+# minimum distance between bst nodes
+
+**思路：因为是搜索二叉树，所以最小距离一定在父子节点间，采用树的中序遍历即可**
+
+```
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int minDiffInBST(TreeNode* root) {
+        if (root->left != nullptr) minDiffInBST(root->left);
+        if (pre >= 0) res = min(res, root->val - pre);
+        pre = root->val;
+        if (root->right != nullptr) minDiffInBST(root->right);
+        return res;
+    }
+    
+    int pre = -1;
+    int res = INT_MAX;
+};
+```
+
