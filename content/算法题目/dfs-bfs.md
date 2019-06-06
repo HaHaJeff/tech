@@ -65,3 +65,82 @@ public:
 	vector<vector<int>> visited;
 };
 ```
+
+
+
+# pacific-atlantic-water-flow
+
+每个坐标点表示该点的水位高度，只能由高水位流向低水位，求哪些点可以同时流向太平洋和大西洋
+
+```
+Given the following 5x5 matrix:
+
+  Pacific ~   ~   ~   ~   ~ 
+       ~  1   2   2   3  (5) *
+       ~  3   2   3  (4) (4) *
+       ~  2   4  (5)  3   1  *
+       ~ (6) (7)  1   4   5  *
+       ~ (5)  1   1   2   4  *
+          *   *   *   *   * Atlantic
+
+Return:
+
+[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (positions with parentheses in above matrix).
+```
+
+```
+class Solution {
+public:
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& matrix) {
+        if(matrix.size() == 0 || matrix[0].size() == 0) return {};
+        int m = matrix.size();
+        int n = matrix[0].size();
+        
+        dir.push_back({0, 1}); dir.push_back({0, -1}); dir.push_back({1, 0}); dir.push_back({-1, 0}); 
+        vector<vector<int>> pacific(m, vector<int>(n, 0));
+        vector<vector<int>> atlantic(m, vector<int>(n, 0));
+        queue<pair<int, int>> pQueue;
+        queue<pair<int, int>> aQueue;
+        
+        for (int i = 0; i < m; i++) {
+            pQueue.push({i, 0});
+            aQueue.push({i, n-1});
+            pacific[i][0] = 1;
+            atlantic[i][n-1] = 1;
+        }
+        for (int j = 0; j < n; j++) {
+            pQueue.push({0, j});
+            aQueue.push({m-1,j});
+            pacific[0][j] = 1;
+            atlantic[m-1][j] = 1;            
+        }
+        bfs(matrix, pQueue, pacific);
+        bfs(matrix, aQueue, atlantic);
+        vector<vector<int>> ans;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (pacific[i][j] == 1 && atlantic[i][j] == 1) ans.push_back({i, j});
+            }
+        }
+        return ans;
+    }
+    
+    void bfs(vector<vector<int>>& matrix, queue<pair<int, int>>& q, vector<vector<int>>& visited) {
+        int m = matrix.size(); int n = matrix[0].size();
+        while (!q.empty()) {
+            pair<int, int> t = q.front(); q.pop();
+            int curX = t.first; int curY = t.second;
+            
+            for (auto& d : dir) {
+                int x = curX + d.first; int y = curY + d.second;
+                if (x < 0 || x >= m || y < 0 || y >= n || visited[x][y] == 1 || matrix[x][y] < matrix[curX][curY]) continue;
+                visited[x][y] = 1;
+                q.push({x, y});
+            }
+        }
+    }
+    
+    vector<pair<int, int>> dir;
+};
+```
+
