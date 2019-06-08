@@ -708,3 +708,37 @@ public:
     }
 };
 ```
+
+# path sum ii
+**与path sum类似**
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        vector<int> cur;
+        vector<vector<int>> ans;
+        helper(root, sum, ans, cur);
+        return ans;
+    }
+    
+    void helper(TreeNode* root, int sum, vector<vector<int>>& ans, vector<int>& cur) {
+        if (root == nullptr) return;
+        cur.push_back(root->val);
+        if (root->left == nullptr && root->right == nullptr && sum == root->val) {
+            ans.push_back(cur);
+        }
+        helper(root->left, sum-root->val, ans, cur);
+        helper(root->right, sum-root->val, ans, cur);
+        cur.pop_back();
+    }
+};
+```
