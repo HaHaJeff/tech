@@ -1,7 +1,6 @@
 # satisfiablity of equality equations
 - 判断等式是否满足
 
-
 ``` cpp
 Input: ["a==b","b!=a"]
 Output: false
