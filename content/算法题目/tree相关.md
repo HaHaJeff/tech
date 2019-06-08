@@ -644,3 +644,67 @@ public:
 };
 ```
 
+# path sum iii
+**暴力，对每个点都算一次**
+``` cpp
+class Solution {
+public:
+    int pathSum(TreeNode* root, int sum) {
+        return root == nullptr ? 0 : (calc(root, sum) + pathSum(root->left, sum) + pathSum(root->right, sum));
+    }
+    
+    int calc(TreeNode* root, int sum) {
+        return root == nullptr ? 0 : (root->val == sum) + calc(root->left, sum - root->val) + calc(root->right, sum - root->val);
+    }
+};
+```
+
+**前缀和**
+``` cpp
+class Solution {
+public:
+    int pathSum(TreeNode* root, int sum) {
+        std::unordered_map<int, int> preSum;
+        preSum[0] = 1;
+        return helper(root, sum, 0, preSum);
+    }
+    
+    int helper(TreeNode* root, int sum, int curSum, std::unordered_map<int, int>& preSum) {
+        if (root == nullptr) return 0;
+        curSum += root->val;
+        int res = preSum[curSum-sum]; 
+        preSum[curSum]++;
+
+        res += helper(root->left, sum, curSum, preSum) + helper(root->right, sum, curSum, preSum);
+        preSum[curSum]--;
+        return res;
+    }
+};
+```
+
+# path sum
+
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum) {
+        if (root == nullptr) return false;
+        return helper(root, sum);
+    }
+    
+    bool helper(TreeNode* root, int sum) {
+        if (root == nullptr) return false;
+        if (root->left == nullptr && root->right == nullptr && sum == root->val) return true;
+        return helper(root->left, sum - root->val) || helper(root->right, sum - root->val);
+    }
+};
+```
