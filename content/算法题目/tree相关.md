@@ -742,3 +742,51 @@ public:
     }
 };
 ```
+
+# minimum absolute difference in bst
+- burst force，对每一个点都进行一次运算
+``` cpp
+class Solution {
+public:
+    int getMinimumDifference(TreeNode* root) {
+        if (root == nullptr) return INT_MAX;
+        int minDiff = min(helper(root->left, root->val, INT_MAX), helper(root->right, root->val, INT_MAX));
+        return min(minDiff, min(getMinimumDifference(root->left), getMinimumDifference(root->right)));
+        
+    }
+    
+    int helper(TreeNode* root, int val, int minDiff) {
+        if (root == nullptr) return minDiff;
+        minDiff = min(minDiff, abs(root->val - val));
+        if (val <= root->val) {
+            return helper(root->left, val, minDiff);
+        } else {
+            return helper(root->right, val, minDiff);
+        }
+    }
+};
+```
+
+- 中序遍历
+
+``` cpp
+**class** **Solution** {
+**public**:
+**int** **getMinimumDifference**(TreeNode* root) {
+**if** (root == NULL) **return** 0;
+**int** res = INT_MAX;
+**int** prev = INT_MAX;
+helper(root, prev, res);
+**return** res;
+}
+**private**:
+**void** **helper**(TreeNode* root, **int**& prev, **int**& res) {
+**if** (root == NULL) **return**;
+helper(root->left, prev, res);
+**int** diff = abs(root->val - prev);
+**if** (diff < res) res = diff;
+prev = root->val;
+helper(root->right, prev, res);
+}
+};
+```
