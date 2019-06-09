@@ -770,23 +770,23 @@ public:
 - 中序遍历
 
 ``` cpp
-**class** **Solution** {
-**public**:
-**int** **getMinimumDifference**(TreeNode* root) {
-**if** (root == NULL) **return** 0;
-**int** res = INT_MAX;
-**int** prev = INT_MAX;
-helper(root, prev, res);
-**return** res;
+class Solution {
+public:
+int getMinimumDifference**(TreeNode* root) {
+	if (root == NULL) **return** 0;
+	in res = INT_MAX;
+	int prev = INT_MAX;
+	helper(root, prev, res);
+	return res;
 }
-**private**:
-**void** **helper**(TreeNode* root, **int**& prev, **int**& res) {
-**if** (root == NULL) **return**;
-helper(root->left, prev, res);
-**int** diff = abs(root->val - prev);
-**if** (diff < res) res = diff;
-prev = root->val;
-helper(root->right, prev, res);
-}
+private:
+	void helper**(TreeNode* root, **int**& prev, **int**& res) {
+		if (root == NULL) **return**;
+		helper(root->left, prev, res);
+		int diff = abs(root->val - prev);
+		if (diff < res) res = diff;
+		prev = root->val;
+		helper(root->right, prev, res);
+	}
 };
 ```
