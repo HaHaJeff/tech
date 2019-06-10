@@ -790,3 +790,26 @@ private:
 	}
 };
 ```
+
+# convert sorted array to binary search tree
+**思路：二分+递归**
+``` cpp
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        int n = nums.size();
+        return sortedArrayToBST(nums, 0, n);
+    }
+
+    TreeNode* sortedArrayToBST(vector<int>& nums, int start, int end) {
+    	if(start >= end) {
+    		return NULL;
+    	}
+    	int mid = (start + end) / 2;
+    	TreeNode* root = new TreeNode(nums[mid]);
+    	root -> left = sortedArrayToBST(nums, start, mid);
+    	root -> right = sortedArrayToBST(nums, mid + 1, end);
+    	return root;
+    }
+};
+```
