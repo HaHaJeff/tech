@@ -144,3 +144,74 @@ public:
 };
 ```
 
+# course schedule ii
+
+**思路：采用深度优先遍历图即可**
+
+- 边表示课程之间的偏序关系，例如A-B表示学习B之前需要先学习A
+- 深度优先遍历该图，当遍历到最后一个节点时，表示学习该节点表示的课程之前，需要学习遍历路径上所有的课程
+- 需要注意是否存在环，采用todo以及done判断是否有环，如果在深度优先遍历中出现todo == false && done == true，则表示遇见环了
+
+``` cpp
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        for (auto& p : prerequisites) {
+            graph[p[1]].push_back(p[0]);
+        }
+        vector<bool> todo(numCourses, true), done(numCourses, false);
+        vector<int> ans;
+        for (int i = 0; i < numCourses; i++) {
+            if (done[i] == true) continue;
+            if (circum(graph, todo, done, ans, i)) return {};
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+    
+    bool circum(const vector<vector<int>>& graph, vector<bool>& todo, vector<bool>& done, vector<int>& ans, int node) {
+        if (todo[node] == false && done[node] == true) return true;
+        if (done[node] == true) return false;
+        todo[node] = false; done[node] = true;
+        for (int nei : graph[node]) {
+            if (circum(graph, todo, done, ans, nei) == true) return true;
+        }
+        ans.push_back(node);
+        todo[node] = true;
+        return false;
+    }
+    
+};
+```
+
+# course schedule
+
+``` cpp
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        for (auto& p : prerequisites) {
+            graph[p[1]].push_back(p[0]);
+        }
+        vector<bool> todo(numCourses, true), done(numCourses, false);
+        for (int i = 0; i < numCourses; i++) {
+            if (done[i] == true) continue;
+            if (circum(graph, todo, done, i)) return false;
+        }
+        return true;
+    }
+    
+    bool circum(const vector<vector<int>>& graph, vector<bool>& todo, vector<bool>& done, int node) {
+        if (todo[node] == false && done[node] == true) return true;
+        if (done[node] == true) return false;
+        todo[node] = false; done[node] = true;
+        for (int nei : graph[node]) {
+            if (circum(graph, todo, done, nei) == true) return true;
+        }
+        todo[node] = true;
+        return false;
+    }
+};
+```
