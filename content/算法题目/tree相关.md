@@ -813,3 +813,33 @@ public:
     }
 };
 ```
+
+# maximum binary tree
+**思路：二叉树的题目多与二分搜索以及递归相关，此题亦不例外**
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        return constructMaximumBinaryTree(nums, nums.begin(), nums.end());
+    }
+    
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums, const vector<int>::iterator& l, const vector<int>::iterator& r) {
+        if (l-r >= 0) return nullptr;
+        
+        auto m = max_element(l, r);
+        TreeNode* root = new TreeNode(*m);
+        root->left = constructMaximumBinaryTree(nums, l, m);
+        root->right = constructMaximumBinaryTree(nums, m+1, r);
+        return root;
+    }
+};
+```
