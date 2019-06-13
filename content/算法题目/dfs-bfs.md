@@ -215,3 +215,27 @@ public:
     }
 };
 ```
+
+# keys and rooms
+
+**思路：BFS**
+
+``` cpp
+class Solution {
+public:
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        stack<int> todo;
+        todo.push(0);
+        unordered_set<int>done;
+        while (!todo.empty()) {
+            int cur = todo.top(); todo.pop();
+            done.insert(cur);
+            for (int i : rooms[cur]) {
+                if (done.count(i)) continue;
+                todo.push(i);
+            }
+        }
+        return done.size() == rooms.size();
+    }
+};
+```
