@@ -920,3 +920,75 @@ public:
  * bool param_2 = obj->search(word);
  */
 ```
+
+# implement trie prefix tree
+
+``` cpp
+class Trie {
+public:
+    /** Initialize your data structure here. */
+    Trie() {
+        root = new TrieNode();
+    }
+    
+    ~Trie() {
+        delete root;
+    }
+    
+    /** Inserts a word into the trie. */
+    void insert(string word) {
+        TrieNode* node = root;
+        
+        for (auto& ch : word) {
+            if (node->child[ch-'a'] == nullptr) {
+                node->child[ch-'a'] = new TrieNode();
+            }
+            node = node->child[ch-'a'];
+        }
+        
+        node->leaf = true;
+    }
+    
+    /** Returns if the word is in the trie. */
+    bool search(string word) {
+        TrieNode* node = root;
+        
+        for (int i = 0; i < word.size() && node != nullptr; i++) {
+            node = node->child[word[i] - 'a'];
+        }
+        
+        return node != nullptr && node->leaf == true;
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    bool startsWith(string prefix) {
+        
+        TrieNode* node = root;
+        for (int i = 0; i < prefix.size() && node != nullptr; i++) {
+            node = node->child[prefix[i] - 'a'];
+        }
+        return node != nullptr;
+    }
+    
+    struct TrieNode {
+        TrieNode* child[26];
+        bool leaf;
+        TrieNode() {
+            leaf = false;
+            for (int i = 0; i < 26; i++) {
+                child[i] = nullptr;
+            }
+        }
+    };
+    
+    TrieNode* root;
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie* obj = new Trie();
+ * obj->insert(word);
+ * bool param_2 = obj->search(word);
+ * bool param_3 = obj->startsWith(prefix);
+ */
+```
