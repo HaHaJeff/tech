@@ -843,3 +843,80 @@ public:
     }
 };
 ```
+
+# add and search word data structure desgin
+``` cpp
+struct TrieNode {
+    TrieNode() : leaf(false) { for (int i = 0; i < 26; i++) child[i] = nullptr; }
+    TrieNode* child[26];
+    bool leaf;
+};
+
+struct Trie {
+    
+    Trie() {
+        root = new TrieNode();
+    }
+    
+    ~Trie() {
+        delete root;
+    }
+    
+    TrieNode* root;
+    
+    void add(const string& word) {
+        TrieNode* cur = root;
+        for (auto& ch : word) {
+            if (cur->child[ch-'a'] == nullptr) {
+                cur->child[ch-'a'] = new TrieNode();
+            }
+            cur = cur->child[ch-'a'];
+        }
+        cur->leaf = true;
+    }
+    
+    bool search(const string& word, TrieNode* node) {
+        for (int i = 0; i < word.size() && node != nullptr; i++) {
+            if (word[i] == '.') {
+                TrieNode* tmp = node;
+                string str(word.substr(i+1));
+                for (int i = 0; i < 26; i++) {
+                    node = tmp->child[i];
+                    if (search(str, node)) return true; 
+                }
+                return false;
+            } else {
+                node = node->child[word[i]-'a'];    
+            }
+        }
+        return node != nullptr && node->leaf == true;
+    }
+};
+
+class WordDictionary {
+public:
+    /** Initialize your data structure here. */
+    WordDictionary() {
+        
+    }
+    
+    /** Adds a word into the data structure. */
+    void addWord(string word) {
+        trie.add(word);
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    bool search(string word) {
+        return trie.search(word, trie.root);
+    }
+    
+    Trie trie;
+};
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */
+```
