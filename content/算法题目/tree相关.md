@@ -992,3 +992,29 @@ public:
  * bool param_3 = obj->startsWith(prefix);
  */
 ```
+
+# distribute coins in binary tree
+
+**思路：二叉树分金币问题**
+
+- 深度优先遍历所有的节点
+- 每一个节点返回其子节点多余的或者少的金币
+
+``` cpp
+class Solution {
+public:
+    int distributeCoins(TreeNode* root) {
+        int ans = 0;
+        helper(root, ans);
+        return ans;
+    }
+    
+    int helper(TreeNode* root, int& ans) {
+        if (root == nullptr) return 0;
+        int l = helper(root->left, ans);
+        int r = helper(root->right, ans);
+        ans += abs(l) + abs(r);
+        return root->val + l + r - 1;
+    }
+};
+```
