@@ -1018,3 +1018,24 @@ public:
     }
 };
 ```
+
+# leaf similar trees
+
+**思路：dfs遍历，使用string记录叶子节点**
+
+``` cpp
+class Solution {
+public:
+    bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+        string str1; string str2;
+        dfs(root1, str1); dfs(root2, str2);
+        return str1 == str2;
+    }
+    
+    void dfs(TreeNode* root, string& str) {
+        if (root == nullptr) return;
+        if (root->left == nullptr && root->right == nullptr) str += to_string(root->val) + "#";
+        dfs(root->left, str); dfs(root->right, str);
+    }
+};
+```
