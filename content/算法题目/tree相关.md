@@ -1058,3 +1058,58 @@ public:
     }
 };
 ```
+
+# find mode in binary search tree
+
+- 首先找到最大频率(中序遍历)
+- 然后再次中序遍历输出==最大频率的node
+
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> findMode(TreeNode* root) {
+        int maxFreq = 0, prev1 = INT_MIN, curFreq1 = 0;
+        getFreq(root, maxFreq, prev1, curFreq1);
+        int prev2 = INT_MIN, curFreq2 = 0;
+        getModes(root, maxFreq, prev2, curFreq2);
+        
+        return modes;
+    }
+    
+    void getFreq(TreeNode* root, int& maxFreq, int& prev, int& curFreq) {
+        if (root == nullptr) return;
+        getFreq(root->left, maxFreq, prev, curFreq);
+        
+        ++(curFreq*=(prev == root->val ? 1 : 0));
+        prev = root->val;
+        maxFreq = max(maxFreq, curFreq);
+        
+        getFreq(root->right, maxFreq, prev, curFreq);
+    }
+    
+    void getModes(TreeNode* root, int maxFreq, int& prev, int& curFreq) {
+        if (root == nullptr) return;
+        getModes(root->left, maxFreq, prev, curFreq);
+        
+        ++(curFreq*=(prev == root->val ? 1 : 0));
+        prev = root->val;
+
+        if (curFreq == maxFreq) {
+            modes.push_back(root->val);
+        }
+        
+        getModes(root->right, maxFreq, prev, curFreq);
+    }
+    
+    vector<int> modes;
+};
+```
