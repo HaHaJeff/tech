@@ -44,3 +44,68 @@ public:
     }
 };
 ```
+
+# evaluate division
+
+``` cpp
+class Solution {
+public:
+    struct Node {
+        string root;
+        double val;
+        Node() {}
+        Node(string root, double val) : root(root), val(val) {}
+    };
+    unordered_map<string, Node> u;
+    unordered_map<string, int> rank;
+    string findRoot(string x) {
+        while(u[x].root != x) {
+            u[x].val = u[x].val * u[ u[x].root ].val;
+            u[x].root = u[ u[x].root ].root;
+            x = u[x].root;
+        }
+        return x;
+    }
+    void unionRoot(string x, string y, double val) {
+        string i = findRoot(x), j = findRoot(y);
+        if(i != j) {
+            if(rank[i] >= rank[j]) {
+                u[j].root = i;
+                u[j].val = u[x].val / u[y].val / val;
+                rank[i] += rank[j];
+            }
+            else {
+                u[i].root = j;
+                u[i].val = u[y].val / u[x].val * val;
+                rank[j] += rank[i];
+            }
+        }
+    }
+    
+    vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+        for(int i = 0; i < equations.size(); i++) {
+            string from = equations[i][0], to = equations[i][1];
+            double val = values[i];
+            if(!u.count(from)) {
+                u[from] = Node(from, 1);
+                rank[from] = 1;
+            }
+            if(!u.count(to)) {
+                u[to] = Node(to, 1);
+                rank[to] = 1;
+            }
+            unionRoot(from, to, val);
+        }
+        vector<double> res(queries.size());
+        for(int i = 0; i < queries.size(); i++) {
+            string from = queries[i][0], to = queries[i][1];
+            if(!u.count(from) || !u.count(to) || findRoot(from) != findRoot(to)) {
+                res[i] = -1;
+                continue;
+            }
+            res[i] = u[from].val / u[to].val;
+        }
+        return res;
+    }
+};
+```
