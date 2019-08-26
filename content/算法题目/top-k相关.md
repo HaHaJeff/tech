@@ -18,7 +18,7 @@ public:
 };
 ```
 
-- **使用最大堆完成top-k**
+- **使用最小堆完成top-k**
 ``` cpp
 class Solution {
 public:
@@ -42,7 +42,7 @@ public:
 };
 ```
 
-- **使用最小堆完成top-k**
+- **使用最大堆完成top-k**
 ``` cpp
 class Solution {
 public:
@@ -67,7 +67,7 @@ public:
 
 # top k frequent words
 
-**最大堆解决**
+**最小堆解决**
 ``` cpp
 class Solution {
 public:
@@ -97,7 +97,7 @@ public:
 
 # k closest
 
-- **最大堆**
+- **最小堆**
 ``` cpp
 class Solution {
 public:
