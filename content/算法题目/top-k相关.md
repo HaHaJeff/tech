@@ -18,7 +18,7 @@ public:
 };
 ```
 
-- **使用最小堆完成top-k**
+- **使用最小堆完成topk**
 ``` cpp
 class Solution {
 public:

@@ -104,13 +104,14 @@ class Solution {
                 return dfs(root->left, s, k) || dfs(root->right, s, k);
             }
     };
+    ```
 ```
 
 # unique binary search trees
 
 **递归问题，以i为根节点，那么其左子树[1, i-1]，右子树[i+1, end]，同理递归，当sstart > end时，返回1**
 
-``` cpp
+​``` cpp
 class Solution {
     public:
         int numTrees(int n) {
@@ -250,25 +251,25 @@ Input:
 /  \
         2   -3
         return [2, -3, 4], since all the values happen only once, return all of them in any order.
-        ```
+```
 
         ``` cpp
         class Solution {
             public:
                 vector<int> findFrequentTreeSum(TreeNode* root) {
                     vector<int> ret;
-
+    
                     int maxCnt = INT_MIN;
                     int sum = subtreeSum(root, maxCnt);
-
+    
                     for (auto &result : results_) {
                         if (result.second == maxCnt) ret.push_back(result.first);
                     }
-
+    
                     return ret;
-
+    
                 }
-
+    
                 int subtreeSum(TreeNode* root, int& maxCnt) {
                     int sum = 0;
                     if (root != nullptr) {
@@ -277,9 +278,9 @@ Input:
                         maxCnt = std::max(results_[sum], maxCnt);
                     }
                     return sum;
-
+    
                 }
-
+    
             private:
                 std::map<int, int> results_;
         };
@@ -300,7 +301,7 @@ Input:
         Output: 4
         Explanation: The maximum width existing in the third level with the length 4 (5,3,null,9).
         ```
-
+    
         ``` cpp
         class Solution {
             public:
@@ -309,7 +310,7 @@ Input:
                     vector<pair<TreeNode*, int>> cur, next;
                     int maxDis = 1;
                     cur.push_back(make_pair(root, 1));
-
+    
                     while (true) {
                         for (auto iter : cur) {
                             if (iter.first->left != nullptr) next.push_back(make_pair(iter.first->left, iter.second * 2));
@@ -327,7 +328,7 @@ Input:
 # convert bst to greater tree
 **思路：记录右边子树的sum即可**
 
-``` cpp
+​``` cpp
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -1081,41 +1082,42 @@ class Solution {
                 getFreq(root, maxFreq, prev1, curFreq1);
                 int prev2 = INT_MIN, curFreq2 = 0;
                 getModes(root, maxFreq, prev2, curFreq2);
-
+    
                 return modes;
             }
-
+    
             void getFreq(TreeNode* root, int& maxFreq, int& prev, int& curFreq) {
                 if (root == nullptr) return;
                 getFreq(root->left, maxFreq, prev, curFreq);
-
+    
                 ++(curFreq*=(prev == root->val ? 1 : 0));
                 prev = root->val;
                 maxFreq = max(maxFreq, curFreq);
-
+    
                 getFreq(root->right, maxFreq, prev, curFreq);
             }
-
+    
             void getModes(TreeNode* root, int maxFreq, int& prev, int& curFreq) {
                 if (root == nullptr) return;
                 getModes(root->left, maxFreq, prev, curFreq);
-
+    
                 ++(curFreq*=(prev == root->val ? 1 : 0));
                 prev = root->val;
-
+    
                 if (curFreq == maxFreq) {
                     modes.push_back(root->val);
                 }
-
+    
                 getModes(root->right, maxFreq, prev, curFreq);
             }
-
+    
             vector<int> modes;
     };
+    ```
 ```
 # binary tree maximum path sum
 **思路：递归遍历，如果sum < 0，则舍弃**
-``` cpp
+​``` cpp
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -1142,5 +1144,38 @@ class Solution {
         }
 
         int sum;
+};
+```
+
+# lowest common ancestor of deepest leaves
+
+``` cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        return lca(root).first;
+    }
+    
+    pair<TreeNode*, int> lca(TreeNode* root)
+    {
+        if (nullptr == root) return {root, 0};
+        
+        auto left = lca(root->left);
+        auto right = lca(root->right);
+        
+        if (left.second > right.second) return {left.first, left.second+1};
+        if (left.second < right.second) return {right.first, right.second+1};
+        
+        return {root, left.second+1};
+    }
 };
 ```
