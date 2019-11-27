@@ -1195,3 +1195,60 @@ public:
     }
 };
 ```
+
+# symmetric tree
+
+**思路1：bfs**
+
+``` cpp
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        queue<TreeNode*> q;
+        q.push(root);
+        
+        while (!q.empty()) {
+            int l = q.size();
+            
+            vector<int> level;
+            for (int i = 0; i < l; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+                if (node == nullptr) level.push_back(-1);
+                else {
+                    level.push_back(node->val); 
+                    q.push(node->left);
+                    q.push(node->right);                    
+                }
+            }
+            
+            for (int i = 0, j = level.size()-1; i < j; i++, j--) {
+                if (level[i] != level[j]) return false;
+            }
+        }
+        return true;
+    }
+};
+```
+
+
+
+**思路2：dfs**
+
+```
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        return isMirror(root, root);
+    }
+    
+    bool isMirror(TreeNode* root1, TreeNode* root2)
+    {
+        if (root1 == nullptr && root2 == nullptr) return true;
+        if (root1 == nullptr || root2 == nullptr) return false;
+        
+        return root1->val == root2->val && isMirror(root1->left, root2->right) && isMirror(root1->right, root2->left);
+    }
+};
+```
+
